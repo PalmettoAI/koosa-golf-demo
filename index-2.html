@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Koosa Golf | Lexington's Pro Shop Since 1980</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --green-deep:  #0D2B1A;
+    --green-mid:   #1A4A2E;
+    --green-bright:#2D7A45;
+    --lime:        #B8F04A;
+    --white:       #F8F8F4;
+    --off-white:   #EFF0E8;
+    --gray:        #8A8E7E;
+    --dark:        #080F08;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--white);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--lime);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform .1s, width .3s, height .3s;
+    mix-blend-mode: multiply;
+  }
+  .cursor-ring {
+    width: 40px; height: 40px;
+    border: 1px solid var(--green-bright);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform .15s ease-out, width .3s, height .3s, opacity .3s;
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.5rem 3.5rem;
+    mix-blend-mode: normal;
+    background: rgba(8,15,8,0.0);
+    transition: background .4s, padding .4s;
+  }
+  nav.scrolled {
+    background: rgba(8,15,8,0.95);
+    padding: 1rem 3.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: .1em;
+    color: var(--white);
+    line-height: 1;
+  }
+  .nav-logo span { color: var(--lime); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: rgba(248,248,244,0.65);
+    text-decoration: none;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--lime); }
+
+  .nav-cta {
+    display: flex; align-items: center; gap: .6rem;
+    background: var(--lime);
+    color: var(--dark);
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: .7rem 1.5rem;
+    text-decoration: none;
+    transition: all .3s;
+  }
+  .nav-cta:hover { background: var(--white); transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    background: var(--green-deep);
+    position: relative;
+    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 3.5rem 5rem;
+  }
+
+  /* Animated grid lines */
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(45,122,69,0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,122,69,0.12) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridDrift 20s linear infinite;
+  }
+  @keyframes gridDrift {
+    from { transform: translate(0,0); }
+    to   { transform: translate(60px, 60px); }
+  }
+
+  /* Fairway arc */
+  .hero-arc {
+    position: absolute;
+    bottom: -20vh; right: -10vw;
+    width: 80vw; height: 80vw;
+    border: 1px solid rgba(184,240,74,0.08);
+    border-radius: 50%;
+  }
+  .hero-arc:nth-child(3) {
+    width: 60vw; height: 60vw;
+    border-color: rgba(184,240,74,0.12);
+    bottom: -15vh; right: -5vw;
+  }
+
+  .hero-eyebrow {
+    font-size: .7rem;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--lime);
+    margin-bottom: 1.5rem;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp .7s .3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(5rem, 13vw, 14rem);
+    line-height: .92;
+    color: var(--white);
+    letter-spacing: .02em;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp .7s .5s forwards;
+  }
+  .hero-title .outline {
+    -webkit-text-stroke: 1px rgba(248,248,244,0.3);
+    color: transparent;
+  }
+  .hero-title .green { color: var(--lime); }
+
+  .hero-bottom {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-top: 3rem;
+    position: relative; z-index: 2;
+    opacity: 0;
+    animation: fadeUp .7s .8s forwards;
+  }
+
+  .hero-sub {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(248,248,244,0.55);
+    max-width: 40ch;
+  }
+  .hero-sub strong { color: var(--white); font-weight: 500; }
+
+  .hero-right-stack {
+    display: flex; flex-direction: column; align-items: flex-end; gap: 1.5rem;
+  }
+
+  .hero-since {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: rgba(248,248,244,0.4);
+    letter-spacing: .05em;
+  }
+
+  .hero-btn {
+    display: inline-flex; align-items: center; gap: .8rem;
+    background: var(--lime);
+    color: var(--dark);
+    font-size: .8rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    padding: 1rem 2.2rem;
+    text-decoration: none;
+    transition: all .3s;
+  }
+  .hero-btn:hover { background: var(--white); transform: translateY(-2px); }
+  .hero-btn .arrow {
+    transition: transform .3s;
+    font-style: normal;
+  }
+  .hero-btn:hover .arrow { transform: translateX(4px); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: .6rem;
+    z-index: 2;
+    opacity: .5;
+  }
+  .scroll-text { font-size: .65rem; letter-spacing: .25em; text-transform: uppercase; color: var(--lime); }
+  .scroll-bar {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--lime), transparent);
+    animation: scrollAnim 2s ease-in-out infinite;
+  }
+  @keyframes scrollAnim {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--lime);
+    padding: .8rem 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-flex;
+    animation: ticker 25s linear infinite;
+  }
+  .ticker-item {
+    font-size: .75rem;
+    font-weight: 500;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--dark);
+    padding: 0 2rem;
+  }
+  .ticker-dot {
+    color: var(--green-bright);
+    margin-right: 2rem;
+  }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ── SERVICES ── */
+  .services-section {
+    background: var(--white);
+    padding: 7rem 3.5rem;
+  }
+  .services-inner { max-width: 1300px; margin: 0 auto; }
+
+  .section-tag {
+    display: inline-flex; align-items: center; gap: .8rem;
+    font-size: .7rem; letter-spacing: .25em; text-transform: uppercase;
+    color: var(--green-bright); margin-bottom: 1.2rem;
+  }
+  .section-tag::before {
+    content: '';
+    display: block; width: 2rem; height: 1px;
+    background: var(--green-bright);
+  }
+
+  .section-title-large {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 6vw, 6rem);
+    line-height: .95;
+    letter-spacing: .02em;
+    color: var(--dark);
+    margin-bottom: 4rem;
+  }
+  .section-title-large em {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    color: var(--green-bright);
+    font-size: .75em;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    background: var(--off-white);
+  }
+
+  .service-tile {
+    background: var(--white);
+    padding: 3.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background .3s;
+  }
+  .service-tile::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--lime);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s;
+  }
+  .service-tile:hover { background: var(--off-white); }
+  .service-tile:hover::before { transform: scaleX(1); }
+
+  .tile-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    color: var(--off-white);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    transition: color .3s;
+  }
+  .service-tile:hover .tile-num { color: rgba(184,240,74,0.15); }
+
+  .tile-icon { font-size: 2rem; margin-bottom: 1rem; }
+
+  .tile-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .tile-desc {
+    font-size: .95rem;
+    line-height: 1.8;
+    color: var(--gray);
+  }
+
+  .tile-link {
+    display: inline-flex; align-items: center; gap: .5rem;
+    margin-top: 1.5rem;
+    font-size: .75rem; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--green-bright);
+    text-decoration: none;
+    transition: gap .3s;
+  }
+  .tile-link:hover { gap: .9rem; }
+
+  /* ── HERITAGE BAND ── */
+  .heritage {
+    background: var(--green-deep);
+    padding: 7rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .heritage::before {
+    content: '1980';
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30vw;
+    color: rgba(184,240,74,0.04);
+    position: absolute;
+    right: -2vw; bottom: -4vw;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .heritage-inner {
+    max-width: 1300px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+  }
+
+  .heritage-left .section-tag { color: var(--lime); }
+  .heritage-left .section-tag::before { background: var(--lime); }
+
+  .heritage-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    line-height: .95;
+    color: var(--white);
+    letter-spacing: .02em;
+    margin-bottom: 2rem;
+  }
+  .heritage-title span { color: var(--lime); }
+
+  .heritage-body {
+    font-size: 1rem; line-height: 1.9;
+    color: rgba(248,248,244,0.5);
+    margin-bottom: 2.5rem;
+  }
+
+  .heritage-stats {
+    display: grid; grid-template-columns: repeat(3,1fr);
+    gap: 0;
+    border: 1px solid rgba(184,240,74,0.15);
+  }
+  .heritage-stat {
+    padding: 1.8rem 1.5rem;
+    border-right: 1px solid rgba(184,240,74,0.15);
+    text-align: center;
+  }
+  .heritage-stat:last-child { border-right: none; }
+  .stat-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3rem;
+    color: var(--lime);
+    display: block;
+    line-height: 1;
+  }
+  .stat-sm {
+    font-size: .7rem;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: rgba(248,248,244,0.35);
+    margin-top: .4rem;
+  }
+
+  .heritage-right {
+    position: relative;
+  }
+  .heritage-img-box {
+    background: var(--green-mid);
+    aspect-ratio: 4/5;
+    position: relative;
+    overflow: hidden;
+  }
+  .heritage-img-box::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(184,240,74,0.05), transparent);
+  }
+  .heritage-img-placeholder {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(184,240,74,0.12);
+    letter-spacing: .05em;
+  }
+  .heritage-badge {
+    position: absolute;
+    bottom: -1.5rem; right: -1.5rem;
+    background: var(--lime);
+    padding: 1.5rem 2rem;
+    z-index: 2;
+  }
+  .badge-label {
+    font-size: .65rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--dark);
+  }
+  .badge-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; color: var(--dark);
+    line-height: 1.1; display: block;
+  }
+
+  /* ── BRANDS ── */
+  .brands-section {
+    padding: 5rem 3.5rem;
+    background: var(--off-white);
+  }
+  .brands-inner { max-width: 1300px; margin: 0 auto; }
+
+  .brands-label {
+    font-size: .7rem; letter-spacing: .3em;
+    text-transform: uppercase; color: var(--gray);
+    text-align: center; margin-bottom: 3rem;
+  }
+
+  .brands-row {
+    display: flex; align-items: center; justify-content: center;
+    flex-wrap: wrap; gap: 2rem 4rem;
+  }
+  .brand-tag {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: .08em;
+    color: rgba(13,43,26,0.2);
+    transition: color .3s;
+  }
+  .brand-tag:hover { color: var(--green-bright); }
+
+  /* ── REVIEWS ── */
+  .reviews-section {
+    padding: 7rem 3.5rem;
+    background: var(--white);
+  }
+  .reviews-inner { max-width: 1300px; margin: 0 auto; }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+
+  .review-card {
+    border: 1px solid var(--off-white);
+    padding: 2.5rem;
+    transition: border-color .3s, transform .3s;
+    position: relative;
+  }
+  .review-card::before {
+    content: '\201C';
+    font-family: 'DM Serif Display', serif;
+    font-size: 8rem;
+    line-height: .7;
+    color: var(--off-white);
+    position: absolute; top: 1.5rem; right: 1.5rem;
+  }
+  .review-card:hover { border-color: var(--lime); transform: translateY(-4px); }
+
+  .review-stars { color: var(--lime); font-size: 1rem; margin-bottom: 1.2rem; letter-spacing: .1em; }
+  .review-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem; font-style: italic;
+    line-height: 1.7; color: var(--dark);
+    margin-bottom: 1.5rem;
+  }
+  .review-author {
+    font-size: .7rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gray);
+  }
+
+  /* ── VISIT ── */
+  .visit-section {
+    background: var(--dark);
+    padding: 7rem 3.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .visit-section::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(45,122,69,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,122,69,0.08) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  .visit-inner {
+    max-width: 1300px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 6rem; align-items: center;
+    position: relative; z-index: 1;
+  }
+
+  .visit-content .section-tag { color: var(--lime); }
+  .visit-content .section-tag::before { background: var(--lime); }
+
+  .visit-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    line-height: .95;
+    color: var(--white);
+    letter-spacing: .02em;
+    margin-bottom: 1.5rem;
+  }
+  .visit-title .outline {
+    -webkit-text-stroke: 1px rgba(248,248,244,0.25);
+    color: transparent;
+    display: block;
+  }
+
+  .visit-sub {
+    font-size: 1rem; line-height: 1.8;
+    color: rgba(248,248,244,0.45);
+    max-width: 40ch; margin-bottom: 2.5rem;
+  }
+
+  .visit-btn {
+    display: inline-flex; align-items: center; gap: .8rem;
+    background: var(--lime); color: var(--dark);
+    font-size: .8rem; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase;
+    padding: 1.1rem 2.5rem; text-decoration: none;
+    transition: all .3s;
+  }
+  .visit-btn:hover { background: var(--white); transform: translateY(-2px); }
+
+  .visit-details {
+    display: flex; flex-direction: column; gap: 2rem;
+  }
+  .visit-detail {
+    display: flex; gap: 1.5rem; align-items: flex-start;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(248,248,244,0.06);
+  }
+  .visit-detail:last-child { border-bottom: none; padding-bottom: 0; }
+  .vd-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem; color: var(--lime); width: 2rem;
+    flex-shrink: 0; line-height: 1;
+  }
+  .vd-label {
+    font-size: .7rem; letter-spacing: .18em;
+    text-transform: uppercase;
+    color: rgba(248,248,244,0.3);
+    margin-bottom: .4rem;
+  }
+  .vd-value {
+    font-size: .95rem; color: rgba(248,248,244,0.7);
+    line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--green-deep);
+    padding: 3rem 3.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-top: 1px solid rgba(184,240,74,0.1);
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem; letter-spacing: .1em;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--lime); }
+
+  .footer-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+  .footer-links a {
+    font-size: .72rem; letter-spacing: .15em;
+    text-transform: uppercase; color: rgba(248,248,244,0.3);
+    text-decoration: none; transition: color .2s;
+  }
+  .footer-links a:hover { color: var(--lime); }
+
+  .footer-copy {
+    font-size: .72rem; letter-spacing: .1em;
+    color: rgba(248,248,244,0.2);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .7s, transform .7s;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 2rem; }
+    .nav-links { display: none; }
+    .hero { padding: 0 2rem 4rem; }
+    .hero-bottom { flex-direction: column; align-items: flex-start; gap: 2rem; }
+    .hero-right-stack { align-items: flex-start; }
+    .services-grid { grid-template-columns: 1fr; }
+    .heritage-inner, .visit-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .heritage-stats { grid-template-columns: 1fr 1fr 1fr; }
+    .services-section, .heritage, .reviews-section, .visit-section, .brands-section { padding: 5rem 2rem; }
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">Koosa <span>Golf</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#brands">Brands</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+  </ul>
+  <a href="#visit" class="nav-cta">Book a Fitting <span>→</span></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-arc"></div>
+  <div class="hero-arc"></div>
+
+  <p class="hero-eyebrow">Lexington, SC · Est. 1980 · Four PGA Pros On Staff</p>
+
+  <h1 class="hero-title">
+    <span class="outline">Play</span><br/>
+    Better<br/>
+    <span class="green">Golf.</span>
+  </h1>
+
+  <div class="hero-bottom">
+    <p class="hero-sub">
+      Lexington's full-service pro shop. <strong>Custom fittings, elite brands, expert repairs</strong> — and four PGA professionals who care as much about your game as you do.
+    </p>
+    <div class="hero-right-stack">
+      <p class="hero-since">Family-owned &amp; operated since 1980</p>
+      <a href="#services" class="hero-btn">See What We Do <span class="arrow">→</span></a>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span class="scroll-text">Scroll</span>
+    <div class="scroll-bar"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Club Fittings</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Golf Lessons</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Club Repair &amp; Regripping</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Titleist · Callaway · TaylorMade</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Doppler Fitting Studio</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> 4 PGA Professionals</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Two Lexington Locations</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Club Fittings</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Golf Lessons</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Club Repair &amp; Regripping</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Titleist · Callaway · TaylorMade</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Doppler Fitting Studio</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> 4 PGA Professionals</span>
+    <span class="ticker-item"><span class="ticker-dot">✦</span> Two Lexington Locations</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="services-section">
+  <div class="services-inner">
+    <div class="reveal">
+      <p class="section-tag">What We Do</p>
+      <h2 class="section-title-large">Every Part<br/>of Your <em>Game</em></h2>
+    </div>
+    <div class="services-grid reveal">
+      <div class="service-tile">
+        <div class="tile-num">01</div>
+        <div class="tile-icon">🎯</div>
+        <h3 class="tile-title">Custom Club Fitting</h3>
+        <p class="tile-desc">Our state-of-the-art Doppler fitting studio analyzes your swing at impact. Four certified PGA pros assess your height, reach, stance, and swing to find the clubs that actually fit your game — not just your budget.</p>
+        <a href="#visit" class="tile-link">Book a Fitting →</a>
+      </div>
+      <div class="service-tile">
+        <div class="tile-num">02</div>
+        <div class="tile-icon">🏌️</div>
+        <h3 class="tile-title">Golf Lessons</h3>
+        <p class="tile-desc">Whether you've never held a club or you're shaving strokes off a single-digit handicap, our PGA professionals offer lessons tailored to where you are and where you want to be. All ages and skill levels welcome.</p>
+        <a href="#visit" class="tile-link">Schedule a Lesson →</a>
+      </div>
+      <div class="service-tile">
+        <div class="tile-num">03</div>
+        <div class="tile-icon">🔧</div>
+        <h3 class="tile-title">Club Repair &amp; Restoration</h3>
+        <p class="tile-desc">Broken shaft? Worn-out grips you've been putting off? We re-shaft, re-grip, and restore clubs of any brand. Fast turnaround, honest pricing, and craftsmanship from people who actually play the game.</p>
+        <a href="#visit" class="tile-link">Drop Off Your Clubs →</a>
+      </div>
+      <div class="service-tile">
+        <div class="tile-num">04</div>
+        <div class="tile-icon">🛍️</div>
+        <h3 class="tile-title">Full Pro Shop</h3>
+        <p class="tile-desc">Titleist, Callaway, TaylorMade, Under Armour, and every major brand — at the same prices as the big box stores, but with the personal service they can't match. Plus apparel, accessories, and more.</p>
+        <a href="#visit" class="tile-link">Visit the Shop →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HERITAGE -->
+<section id="about" class="heritage">
+  <div class="heritage-inner">
+    <div class="heritage-left">
+      <p class="section-tag reveal">Our Story</p>
+      <h2 class="heritage-title reveal">
+        Columbia's Golf<br/>
+        Shop <span>Since 1980.</span>
+      </h2>
+      <p class="heritage-body reveal">
+        It started with Jimmy Koosa and his wife opening the Weed Hill Driving Range in Irmo in 1980. Over four decades later, Koosa Golf has grown into the Midlands' most trusted golf shop — two locations, four PGA professionals, and the same family passion for the game that started it all.
+      </p>
+      <p class="heritage-body reveal" style="margin-bottom:0;">
+        We're not a big-box store. We're your pro shop — the place where you can talk real golf, get real advice, and leave with equipment that actually works for your body and your swing.
+      </p>
+      <div class="heritage-stats reveal" style="margin-top:2.5rem;">
+        <div class="heritage-stat">
+          <span class="stat-big">44+</span>
+          <p class="stat-sm">Years Open</p>
+        </div>
+        <div class="heritage-stat">
+          <span class="stat-big">4</span>
+          <p class="stat-sm">PGA Pros</p>
+        </div>
+        <div class="heritage-stat">
+          <span class="stat-big">2</span>
+          <p class="stat-sm">Locations</p>
+        </div>
+      </div>
+    </div>
+    <div class="heritage-right reveal">
+      <div class="heritage-img-box">
+        <div class="heritage-img-placeholder">KG</div>
+      </div>
+      <div class="heritage-badge">
+        <span class="badge-label">Lexington's Best</span>
+        <span class="badge-val">Pro Shop</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<section id="brands" class="brands-section">
+  <div class="brands-inner">
+    <p class="brands-label reveal">Authorized Dealer — All Major Brands</p>
+    <div class="brands-row reveal">
+      <span class="brand-tag">Titleist</span>
+      <span class="brand-tag">Callaway</span>
+      <span class="brand-tag">TaylorMade</span>
+      <span class="brand-tag">Under Armour</span>
+      <span class="brand-tag">Ping</span>
+      <span class="brand-tag">Cleveland</span>
+      <span class="brand-tag">Cobra</span>
+      <span class="brand-tag">Odyssey</span>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <div class="reviews-inner">
+    <p class="section-tag reveal">What Golfers Say</p>
+    <h2 class="section-title-large reveal">Real <em>Reviews</em></h2>
+    <div class="reviews-grid">
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Cap at Koosa provided an excellent fitting experience. He helped me find exactly the right clubs tailored to my swing. Best place in the Midlands for anyone serious about their game."</p>
+        <p class="review-author">— Verified Google Review</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Mickey, Jimmy, Jim, and Avery are all incredibly knowledgeable. Family-owned feel with expert-level service. I've been coming here for years and won't shop anywhere else."</p>
+        <p class="review-author">— Loyal Koosa Customer</p>
+      </div>
+      <div class="review-card reveal">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"BEST PLACE TO SHOP FOR GOLF. Period. The staff actually knows the game and won't try to sell you something that doesn't fit. Took my son here and he's now obsessed with golf."</p>
+        <p class="review-author">— Yellow Pages Review</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section id="visit" class="visit-section">
+  <div class="visit-inner">
+    <div class="visit-content">
+      <p class="section-tag reveal">Come See Us</p>
+      <h2 class="visit-title reveal">
+        We're Right<br/>
+        <span class="outline">Here In</span><br/>
+        Lexington.
+      </h2>
+      <p class="visit-sub reveal">
+        Stop in, bring your current clubs, and let our PGA professionals show you what a real fitting experience feels like. No appointment necessary for the shop — fittings and lessons by appointment.
+      </p>
+      <a href="tel:8033593333" class="visit-btn reveal">Call (803) 359-3333 →</a>
+    </div>
+    <div class="visit-details reveal">
+      <div class="visit-detail">
+        <div class="vd-num">01</div>
+        <div>
+          <p class="vd-label">Lexington Location</p>
+          <p class="vd-value">5058 Sunset Blvd<br/>Lexington, SC 29072</p>
+        </div>
+      </div>
+      <div class="visit-detail">
+        <div class="vd-num">02</div>
+        <div>
+          <p class="vd-label">Hours</p>
+          <p class="vd-value">Mon – Sat: 10:00 AM – 7:00 PM<br/>Sunday: 1:00 PM – 6:00 PM</p>
+        </div>
+      </div>
+      <div class="visit-detail">
+        <div class="vd-num">03</div>
+        <div>
+          <p class="vd-label">Phone</p>
+          <p class="vd-value">(803) 359-3333</p>
+        </div>
+      </div>
+      <div class="visit-detail">
+        <div class="vd-num">04</div>
+        <div>
+          <p class="vd-label">Northeast Columbia</p>
+          <p class="vd-value">9365 Two Notch Rd<br/>Columbia, SC 29223</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Koosa <span>Golf</span></div>
+  <ul class="footer-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#about">Our Story</a></li>
+    <li><a href="#brands">Brands</a></li>
+    <li><a href="#visit">Visit</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 Koosa Golf, Inc. · Lexington &amp; Columbia, SC</p>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring   = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top  = my + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width  = '20px';
+      cursor.style.height = '20px';
+      ring.style.width    = '60px';
+      ring.style.height   = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width  = '12px';
+      cursor.style.height = '12px';
+      ring.style.width    = '40px';
+      ring.style.height   = '40px';
+    });
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveals
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
