@@ -664,10 +664,16 @@
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
 
+  .nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;}
+  .nav-hamburger span{display:block;width:24px;height:2px;background:var(--lime);transition:all .3s;}
+
   /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
     nav { padding: 1.2rem 2rem; }
     .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-hamburger{display:flex;}
+    .nav-links.nav-open{display:flex;flex-direction:column;position:absolute;top:100%;left:0;right:0;background:rgba(8,15,8,.95);padding:1.5rem 2rem;border-top:1px solid rgba(184,240,74,.2);gap:1.2rem;z-index:99;list-style:none;}
     .hero { padding: 0 2rem 4rem; }
     .hero-bottom { flex-direction: column; align-items: flex-start; gap: 2rem; }
     .hero-right-stack { align-items: flex-start; }
@@ -697,6 +703,7 @@
     <li><a href="#brands">Brands</a></li>
     <li><a href="#visit">Visit Us</a></li>
   </ul>
+  <button class="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   <a href="#visit" class="nav-cta">Book a Fitting <span>→</span></a>
 </nav>
 
@@ -935,6 +942,8 @@
 </footer>
 
 <script>
+  document.querySelector('.nav-hamburger').addEventListener('click',function(){document.querySelector('.nav-links').classList.toggle('nav-open');});
+
   // Custom cursor
   const cursor = document.getElementById('cursor');
   const ring   = document.getElementById('cursorRing');
